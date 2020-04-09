@@ -19,9 +19,8 @@ R = computeR(sinf);
 W = computeW(crdinf,x0,y0,f,dx,dy);
 
 %% 星图识别
-%%% 计算星对角距
-Q1 = dot_product(R);
-Q2 = X_dot(W);
+%%% 计算星对点积 星表计算结果在Q1 , 观测计算结果在Q2
+[Q1,Q2] = dot_product(R,W);
 
 %%%% 求差
 k = 1;
