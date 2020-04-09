@@ -1,5 +1,5 @@
-function Q1 = dot_product(R)
-%¼ÆËãECEIÏÂĞÇ¶Ôµã»ı
+function [Q1,Q2] = dot_product(R,W)
+%Â¼è®¡ç®—æ˜Ÿå¯¹ç‚¹ç§¯
 Q1 = zeros(size(R,1),size(R,1));
 for i = 1 : size(R,1)
   for j = 1 : size(R,1)
@@ -10,6 +10,20 @@ for i = 1 : size(Q1,1)
     for j = 1 : i
      Q1(i,j) = 1e10;     
     end
+end
+
+Q2 = zeros(size(W,1),size(W,1));
+for i = 1 : size(W,1)
+   for j = 2: size(W,1)
+    Q2(i,j) = dot(W(i,:),W(j,:));
+   end
+end
+%ä¿ç•™ä¸Šä¸‰è§’å…ƒç´ 
+for i = 1 : size(Q2,1)
+    for j = 1 : i
+        Q2(i,j) = 1e10;
+    end
+end
 end
 end
 
