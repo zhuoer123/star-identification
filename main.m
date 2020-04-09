@@ -1,83 +1,52 @@
 clc;clear;
 close all
 
-%%%% ĞÇÍ¼Ê¶±ğ¹ı³Ì
-%%% Ïà»ú²ÎÊı
-f = 107.46496182529; % ½¹¾à mm
-dx = 5.5*1e-3; % ÏñÔª mm
-dy = 5.5*1e-3; % ÏñÔª mm
+%%%% æ˜Ÿå›¾è¯†åˆ«è¿‡ç¨‹
+%%% ç›¸æœºå‚æ•°
+f = 107.46496182529; % ç„¦è· mm
+dx = 5.5*1e-3; % åƒå…ƒ mm
+dy = 5.5*1e-3; % åƒå…ƒ mm
 x0 = 2048/2*dx;
 y0 = 2048/2*dy;
 
-%% ¶ÁÈëÊı¾İ 
-% ĞÇ¿âÎÄ¼ş£ºsinf ; ĞÇÃô¸ĞÆ÷ÅÄÉã£ºcrdinf
-sinf = load('sinf.txt');  %% ³à¾­¡¢³àÎ³£¨¶È£©
-crdinf = load('60.txt');  %% X£¨ÏñËØ£© Y£¨ÏñËØ£©
+%% è¯»å…¥æ•°æ® 
+% æ˜Ÿåº“æ–‡ä»¶ï¼šsinf ; æ˜Ÿæ•æ„Ÿå™¨æ‹æ‘„ï¼šcrdinf
+sinf = load('sinf.txt');  %% èµ¤ç»ã€èµ¤çº¬ï¼ˆåº¦ï¼‰
+crdinf = load('60.txt');  %% Xï¼ˆåƒç´ ï¼‰ Yï¼ˆåƒç´ ï¼‰
 
-%%% ¼ÆËãÁ½¸ö×ø±êÏµÏÂµÄÎ»ÖÃÊ¸Á¿
+%%% è®¡ç®—ä¸¤ä¸ªåæ ‡ç³»ä¸‹çš„ä½ç½®çŸ¢é‡
 R = computeR(sinf);
 W = computeW(crdinf,x0,y0,f,dx,dy);
 
-%% ĞÇÍ¼Ê¶±ğ
-%%% ¼ÆËãĞÇ¶Ô½Ç¾à
+%% æ˜Ÿå›¾è¯†åˆ«
+%%% è®¡ç®—æ˜Ÿå¯¹è§’è·
 Q1 = dot_product(R);
 Q2 = X_dot(W);
 
-%%%% Çó²î
-%%% ¹Ì¶¨ A ĞÇ
-    for i = 2 : size(Q2,1)
-        A = Q2(1,i)*ones(size(Q1,1),size(Q1,1));
-        B = abs(A - Q1);
-        [r1(i-1),c1(i-1)] = find(abs(A - Q1) == min(min(abs(A - Q1))));
-        flag1 = [r1;c1];
-    end  
-if max(r1) - min(r1) == 0
-    disp(['AĞÇµÄ¶ÔÓ¦ĞÇÊÇsinfÖĞµÄ',num2str(r1(1)), 'ºÅĞÇ']);
-else
-      disp('´íÎó£¡');
-end
-    
-%%% ¹Ì¶¨ B ĞÇ
-for i = 3 : size(Q2,1)
-     A = Q2(2,i)*ones(size(Q1,1),size(Q1,1));
-     B = abs(A - Q1);
-     [r2(i-2),c2(i-2)] = find(abs(A - Q1) == min(min(abs(A - Q1))));
-     flag2 = [r2;c2];
-end 
-if max(r2) - min(r2) == 0
-    disp(['BĞÇµÄ¶ÔÓ¦ĞÇÊÇsinfÖĞµÄ',num2str(r2(1)), 'ºÅĞÇ']);
-else
-      disp('´íÎó£¡');
+%%%% æ±‚å·®
+k = 1;
+for i = 1 : size(Q2,1)
+      for j = i+1 : size(Q2,1)
+          A = Q2(i,j)*ones(size(Q1,1),size(Q1,1));
+          [r(k),c(k)] = find(abs(A - Q1) == min(min(abs(A - Q1))));
+          k = k+1;
+      end  
 end
 
-%%% ¹Ì¶¨ C ĞÇ
-for i = 4 : size(Q2,1)
-     A = Q2(3,i)*ones(size(Q1,1),size(Q1,1));
-     B = abs(A - Q1);
-     [r3(i-3),c3(i-3)] = find(abs(A - Q1) == min(min(abs(A - Q1))));
-     flag3 = [r3;c3];
-end 
-if max(r3) - min(r3) == 0
-    disp(['CĞÇµÄ¶ÔÓ¦ĞÇÊÇsinfÖĞµÄ',num2str(r3(1)), 'ºÅĞÇ']);
-else
-      disp('´íÎó£¡');
-end
+%%%åˆ¤åˆ«ç»“æœå­˜å‚¨åœ¨yä¸­
+y = unique([r;c]);
+%%% è¾“å‡º
+disp(['Aæ˜Ÿçš„å¯¹åº”æ˜Ÿæ˜¯sinfä¸­çš„',num2str(y(1)), 'å·æ˜Ÿ'])
+disp(['Bæ˜Ÿçš„å¯¹åº”æ˜Ÿæ˜¯sinfä¸­çš„',num2str(y(2)), 'å·æ˜Ÿ']);
+disp(['Cæ˜Ÿçš„å¯¹åº”æ˜Ÿæ˜¯sinfä¸­çš„',num2str(y(3)), 'å·æ˜Ÿ']); 
+disp(['Dæ˜Ÿçš„å¯¹åº”æ˜Ÿæ˜¯sinfä¸­çš„',num2str(y(4)), 'å·æ˜Ÿ']); 
+disp(['Eæ˜Ÿçš„å¯¹åº”æ˜Ÿæ˜¯sinfä¸­çš„',num2str(y(5)), 'å·æ˜Ÿ']); 
 
-%%% ¹Ì¶¨ D ĞÇ£¬ÅĞ¶Ï D EĞÇ ¶ÔÓ¦ĞÇ
-for i = 5 : size(Q2,1)
-     A = Q2(4,i)*ones(size(Q1,1),size(Q1,1));
-     B = abs(A - Q1);
-     [r4(i-4),c4(i-4)] = find(abs(A - Q1) == min(min(abs(A - Q1))));
-     flag4 = [r4;c4];
-end 
-if r4 - flag1(2,3) == 0  &&  r4 - flag2(2,2) == 0 && r4 - flag3(2,1) ==0
-    disp(['DĞÇµÄ¶ÔÓ¦ĞÇÊÇsinfÖĞµÄ',num2str(r4), 'ºÅĞÇ']);
-else
-      disp('´íÎó£¡');
+%%% è¯†åˆ«ç»“æœçŸ©é˜µ
+result1 = zeros(size(crdinf,1),2);
+result2 = zeros(size(crdinf,1),2);
+for ii = 1 : size(crdinf,1)
+   result1(ii,:) = crdinf(ii,:);  
+   result2(ii,:) = sinf(y(ii),:);
 end
-
-if c4 - flag1(2,4) == 0  &&  c4 - flag2(2,3) == 0 && c4 - flag3(2,2) ==0
-    disp(['EĞÇµÄ¶ÔÓ¦ĞÇÊÇsinfÖĞµÄ',num2str(c4), 'ºÅĞÇ']);
-else
-      disp('´íÎó£¡');
-end
+result = [result1 result2];
